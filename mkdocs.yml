@@ -1,0 +1,11 @@
+site_name: Newznab API 
+repo_url: https://github.com/inhies/Newznab-API
+
+theme: readthedocs
+pages:
+- Introduction: index.md
+- API:
+    - 'Functions': 'functions.md'
+    - 'Errors': 'errors.md'
+    - 'Attributes': 'attributes.md'
+    - 'Categories': 'categories.md'
