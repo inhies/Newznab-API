@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Functions - Newznab API</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Functions";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Newznab API</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>API</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Functions</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#caps">CAPS</a></li>
+                
+                    <li><a class="toctree-l4" href="#register">REGISTER</a></li>
+                
+                    <li><a class="toctree-l4" href="#search">SEARCH</a></li>
+                
+                    <li><a class="toctree-l4" href="#tv-search">TV-SEARCH</a></li>
+                
+                    <li><a class="toctree-l4" href="#movie-search">MOVIE-SEARCH</a></li>
+                
+                    <li><a class="toctree-l4" href="#music-search">MUSIC-SEARCH</a></li>
+                
+                    <li><a class="toctree-l4" href="#book-search">BOOK-SEARCH</a></li>
+                
+                    <li><a class="toctree-l4" href="#details">DETAILS</a></li>
+                
+                    <li><a class="toctree-l4" href="#getnfo">GETNFO</a></li>
+                
+                    <li><a class="toctree-l4" href="#get">GET</a></li>
+                
+                    <li><a class="toctree-l4" href="#cart-add">CART-ADD</a></li>
+                
+                    <li><a class="toctree-l4" href="#cart-del">CART-DEL</a></li>
+                
+                    <li><a class="toctree-l4" href="#comments">COMMENTS</a></li>
+                
+                    <li><a class="toctree-l4" href="#comments-add">COMMENTS-ADD</a></li>
+                
+                    <li><a class="toctree-l4" href="#user">USER</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../errors/">Errors</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../attributes/">Attributes</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../categories/">Categories</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Newznab API</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API &raquo;</li>
+        
+      
+    
+    <li>Functions</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/inhies/Newznab-API" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>All functions are executed as HTTP(S) requests over TCP. All parameters are to
+be passed as query parameters unless otherwise indicated. All returned XML/JSON
+data is UTF-8 encoded unless otherwise specified. All query parameters should
+be UTF-8 and URL encoded, i.e.::</p>
+<pre><code>query-param = URL-ENCODE(UTF8-ENCODE(param=value)).
+</code></pre>
+<p>The functions are divided into two categories. Functions specific to searching
+and retrieving of items and the their information such as SEARCH and TV-SEARCH
+and functions that are for site/user account management such as CAPS and
+REGISTER.</p>
+<p>Any conforming implementation should support the CAPS and SEARCH functions.
+Other functions are optional and if not supported will return the "203 Function
+Not Available" when invoked. </p>
+<h1 id="caps">CAPS</h1>
+<p>The <code>CAPS</code> function is used to query the server for supported features and
+the protocol version and other meta data relevant to the implementation. This
+function doesn't require the client to provide any login information but
+can be executed out of "login session".</p>
+<table>
+<thead>
+<tr>
+<th>Returned Fields</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>server/version</td>
+<td>The version of the protocol implemented by the server. All implementations should be backwards compatible.</td>
+</tr>
+<tr>
+<td>limits</td>
+<td>The limit and defaults to the number of search results returned.</td>
+</tr>
+<tr>
+<td>retention</td>
+<td>Server retention (how many days NZB information is stored before being purged).</td>
+</tr>
+<tr>
+<td>category</td>
+<td>Defines a searchable category which might have any number of subcategories.</td>
+</tr>
+<tr>
+<td>category/id</td>
+<td>Unique category ID, can be either one of the standard category IDs or a site specific ID.</td>
+</tr>
+<tr>
+<td>category/name</td>
+<td>Any descriptive name for the category. Can be site/language specific.</td>
+</tr>
+<tr>
+<td>category/description</td>
+<td>A description of the contents of the category.</td>
+</tr>
+<tr>
+<td>category/subcat</td>
+<td>A subcategory.</td>
+</tr>
+<tr>
+<td>category/subcat/id</td>
+<td>Unique category ID, can be either one of the standard category IDs or a site specific ID.</td>
+</tr>
+<tr>
+<td>category/subcat/name</td>
+<td>Any descriptive name for the category. Can be site/language specific.</td>
+</tr>
+<tr>
+<td>category/subcat/description</td>
+<td>A description of the contents of the category.</td>
+</tr>
+<tr>
+<td>groups</td>
+<td>Defines a list of active, indexed usenet groups.</td>
+</tr>
+<tr>
+<td>group/name</td>
+<td>Name of usenet group.</td>
+</tr>
+<tr>
+<td>group/description</td>
+<td>Description of usenet group.</td>
+</tr>
+<tr>
+<td>group/lastupdate</td>
+<td>Date and time usenet group was last updated.</td>
+</tr>
+<tr>
+<td>genres</td>
+<td>Defines a list of active genres.</td>
+</tr>
+<tr>
+<td>genre/id</td>
+<td>Id of genre.</td>
+</tr>
+<tr>
+<td>genre/name</td>
+<td>Name of genre.</td>
+</tr>
+<tr>
+<td>genre/categoryid</td>
+<td>The category the genre is associate with.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=caps</code></td>
+<td>Caps function, must always be "caps".</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>o=xxx</code></td>
+<td>Output format, either "JSON" or "XML. Default is "XML".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=caps</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;caps&gt;
+    &lt;!-- server information --&gt;
+    &lt;server version="1.0" title="Newznab" strapline="A great usenet indexer" 
+            email="info@newznab.com" url="http://servername.com/" 
+            image="http://servername.com/theme/black/images/banner.jpg"/&gt;
+
+    &lt;!-- limit parameter range --&gt;
+    &lt;limits max="100" default="50"/&gt;
+
+    &lt;!-- the server NZB retention --&gt;
+    &lt;retention days="400"/&gt;
+
+    &lt;!-- registration available or not --&gt;
+    &lt;registration available="yes" open="yes" /&gt;
+
+    &lt;!-- 
+         The search functions available at the server 
+         The only currently defined search functions are SEARCH and TV-SEARCH.
+         Any conforming implementation should at least support the basic search.
+         Other search functions are optional.
+    --&gt;
+    &lt;searching&gt;
+        &lt;search available="yes"/&gt;
+        &lt;tv-search available="yes"/&gt;
+        &lt;movie-search available="no"/&gt;
+    &lt;/searching&gt;
+
+    &lt;!-- supported categories --&gt;
+    &lt;categories&gt;
+        &lt;category id="1000" name="Console"&gt;
+          &lt;subcat id="1010" name="NDS"/&gt;
+          &lt;subcat id="1020" name="PSP"/&gt;
+        &lt;/category&gt;
+        &lt;category id="2000" name="Movies"&gt;
+          &lt;subcat id="2010" name="Foreign"/&gt;
+        &lt;/category&gt;
+
+        &lt;!-- site specific categories --&gt;
+        &lt;category id="1000001" name="Debian"           description="Latest Debian stuff"/&gt;
+        &lt;category id="1000002" name="Mandrake 2010"    description="Mandrake 2010"&gt;
+          &lt;subcat id="1000003" name="Mandrake 2010 HD" description="Mandrake HD stuff"/&gt;
+          &lt;subcat id="1000004" name="Mandrake 2010 SD" description="Mandrake SD stuff"/&gt;
+        &lt;/category&gt;
+        &lt;!-- etc.. --&gt;
+    &lt;/categories&gt;               
+  &lt;/caps&gt;
+&lt;/xml&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="register">REGISTER</h2>
+<p>The <code>REGISTER</code> function is used for automatically creating and registering
+user account.  This is an optional function and may or may not be available at
+a site. It is also possible that function is available but currently
+registrations at the site are closed. </p>
+<p>The only prerequisite for registering an account is a valid email address
+and any server policies.  It is at the server administration discretion to
+allow or deny registrations based on for example the validity of the email
+address or the the current client host address.</p>
+<p>On successful registration a valid username, password and api key are
+returned to the caller.  On error an appropriate error code is returned.</p>
+<p><strong>HTTP Method</strong></p>
+<p><code>GET</code></p>
+<p><strong>HTTP Response</strong></p>
+<p><code>200 OK</code></p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=register</code></td>
+<td>Register function, must always be "register"</td>
+</tr>
+<tr>
+<td><code>email=xxx</code></td>
+<td>A valid email address to be used for registration. (URL/UTF-8 encoded).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=register&amp;email=john.joe%40acme.com</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;register username="user123" password="pass123" apikey="abcabcd11234abc" /&gt;
+</code></pre>
+</li>
+<li>
+<p>Denial</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=register&amp;email=john.joe%40acme.com</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="103" description="Registration denied"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Registration limit imposed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=register&amp;email=john.joe%40acme.com</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="104" description="No more registrations allowed"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Registration disabled</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=register&amp;email=john.joe%40acme.com</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="203" description="Function not available"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="search">SEARCH</h2>
+<p>The <code>SEARCH</code> function searches the index for items matching the search
+criteria. On successful search the response contains a list of found items.
+Even if search matched nothing an empty response set is created and returned.
+This function requires passing the user credentials.</p>
+<p>Searches that include categories that are not supported by the server are
+still executed but the non-supported categories are simply skipped. This
+basically treats such a search simply as a "no match" but allows the same
+query to be ran simultaneously against several servers. </p>
+<p>The list of search categories specifies a logical OR condition. I.e. an item
+matching the search input in any of the specified categories is considered a
+match and is returned. E.g. a search searching for "linux" in "computer" and
+"ebook" categories searches for matching items in "computer" and "ebook" but
+does not search for example the "movies" category.  Items found in either
+group are then combined into a single result set. If the input string for
+search is empty all items (within the server/query limits) are returned for
+the matching categories. </p>
+<p>When performing the query the categories to be searched are concatenated into
+a single query parameter by <code>,</code> (comma). For example <code>cat=200,300,400</code>,
+which is then URL encoded.</p>
+<p>The returned XML data stream is RSS 2.0 compliant and also contains
+additional information in the extra namespace.</p>
+<p>Response-offset field identifies the current subset of all the matches that
+are being transmitted in the response. In other words, if a search for
+"disco" finds more matches than the server is capable of transmitting in a
+single response, the response needs to be split into several responses. Then
+it is's the clients responsibility to repeat the same query with same
+parameters but specify an increased offset in order to return the next set of
+results. </p>
+<p>If offset query parameter is not used response data contains items between 0
+offset - limit.  If offset query parameter is out of bounds an empty result
+set is returned.</p>
+<p>Attrs parameter provides a comma "," separated list of additional (extended)
+attributes that the search should return if they are applicable to the
+current item.  If attrs is not specified a set of default parameters is
+returned.</p>
+<table>
+<thead>
+<tr>
+<th>Important fields of the returned data (RSS)</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>title</td>
+<td>Title of the found item.</td>
+</tr>
+<tr>
+<td>guid</td>
+<td>A globally unique (GUID) item identifier.</td>
+</tr>
+<tr>
+<td>pubdate</td>
+<td>The publishing date in RSS date object as specified by RFC822/2822. (not the Usenet date)</td>
+</tr>
+<tr>
+<td>category</td>
+<td>The category the NZB belongs to. (This is human readable for RSS. More precise category is found in additional data)</td>
+</tr>
+<tr>
+<td>enclosure</td>
+<td>The NZB url</td>
+</tr>
+</tbody>
+</table>
+<p><strong>HTTP Method</strong></p>
+<p><code>GET</code></p>
+<p><strong>HTTP Response</strong></p>
+<p><code>200 OK</code></p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=search</code></td>
+<td>Search function, must always be "search"</td>
+</tr>
+<tr>
+<td><code>apikey=xxxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>q=xxxx</code></td>
+<td>Search input (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>group=xxxx</code></td>
+<td>List of usenet groups to search delimited by ","</td>
+</tr>
+<tr>
+<td><code>limit=123</code></td>
+<td>Upper limit for the number of items to be returned.</td>
+</tr>
+<tr>
+<td><code>cat=xxx</code></td>
+<td>List of categories to search delimited by ","</td>
+</tr>
+<tr>
+<td><code>o=xxx</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+<tr>
+<td><code>attrs=xxx</code></td>
+<td>List of requested extended attributes delimeted by ","</td>
+</tr>
+<tr>
+<td><code>extended=1</code></td>
+<td>List all extended attributes (attrs ignored)</td>
+</tr>
+<tr>
+<td><code>del=1</code></td>
+<td>Delete the item from a users cart on download.</td>
+</tr>
+<tr>
+<td><code>maxage=123</code></td>
+<td>Only return results which were posted to usenet in the last x days.</td>
+</tr>
+<tr>
+<td><code>offset=50</code></td>
+<td>The 0 based query offset defining which part of the response we want.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=search&amp;apikey=xxxxx&amp;q=a%20tv%20show</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+
+&lt;channel&gt;
+&lt;title&gt;example.com&lt;/tile&gt;
+&lt;description&gt;example.com API results&lt;/description&gt;
+&lt;!--  
+   More RSS content
+ --&gt;
+
+&lt;!-- offset is the current offset of the response
+     total is the total number of items found by the query 
+ --&gt; 
+&lt;newznab:response offset="0" total="2344"/&gt;
+
+&lt;item&gt;        
+  &lt;!-- Standard RSS 2.0 Data --&gt;
+  &lt;title&gt;A.Public.Domain.Tv.Show.S06E05&lt;/title&gt; 
+  &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+  &lt;link&gt;http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9&lt;/link&gt; 
+  &lt;comments&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c#comments&lt;/comments&gt;  
+  &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+  &lt;category&gt;TV &gt; XviD&lt;/category&gt;  
+  &lt;description&gt;Some TV show&lt;/description&gt;
+  &lt;enclosure url="http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt;
+
+  &lt;!-- Additional attributes --&gt;
+  &lt;newznab:attr name="category" value="2000"/&gt; 
+  &lt;newznab:attr name="category" value="2030"/&gt; 
+  &lt;newznab:attr name="size"     value="4294967295"/&gt;
+&lt;/item&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+<li>
+<p>No items matched the search criteria.</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=search&amp;apikey=xxxxx&amp;q=linux%20image</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss&gt;
+&lt;channel&gt;
+    &lt;newznab:response offset="0" total="0"/&gt;
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because user credentials are broken</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=search&amp;apikey=xxxxx&amp;q=linux%20image</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200  OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="100" description="Incorrect user credentials"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because it was malformed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=search&amp;apikey=xxxxx&amp;q=linux%20image</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="200" description="Missing parameter: key"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="tv-search">TV-SEARCH</h2>
+<p>The <code>TV-SEARCH</code> function searches the index in the TV category for items
+matching the search criteria.  The criteria includes query string and in
+addition information about season and episode. On successful search the
+response contains a list of items that matched the query. Even if the search
+matched nothing an empty but valid response is created and returned. This
+function requires passing the user credentials.</p>
+<p>The returned XML data stream is RSS 2.0 compliant and also contains additional
+information in the extra namespace and optionally TV specific information.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=tvsearch</code></td>
+<td>TV-Search function, must always be "tvsearch".</td>
+</tr>
+<tr>
+<td><code>apikey=xxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>limit=123</code></td>
+<td>Upper limit for the number of items to be returned, e.g. 123.</td>
+</tr>
+<tr>
+<td><code>rid=xxxx</code></td>
+<td>TVRage id of the item being queried.</td>
+</tr>
+<tr>
+<td><code>cat=xxx</code></td>
+<td>List of categories to search delimited by ","</td>
+</tr>
+<tr>
+<td><code>season=xxxx</code></td>
+<td>Season string, e.g S13 or 13 for the item being queried.</td>
+</tr>
+<tr>
+<td><code>q=xxxx</code></td>
+<td>Search input (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>ep=xxx</code></td>
+<td>Episode string, e.g E13 or 13 for the item being queried.</td>
+</tr>
+<tr>
+<td><code>o=xml</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+<tr>
+<td><code>attrs=xxx</code></td>
+<td>List of requested extended attributes delimeted by ","</td>
+</tr>
+<tr>
+<td><code>extended=1</code></td>
+<td>List all extended attributes (attrs ignored)</td>
+</tr>
+<tr>
+<td><code>del=1</code></td>
+<td>Delete the item from a users cart on download.</td>
+</tr>
+<tr>
+<td><code>maxage=123</code></td>
+<td>Only return results which were posted to usenet in the last x days.</td>
+</tr>
+<tr>
+<td><code>offset=50</code></td>
+<td>The 0 based query offset defining which part of the response we want.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:
+<code>GET http://servername.com/api?t=tvsearch&amp;apikey=xxx&amp;q=title&amp;season=S03</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+&lt;title&gt;example.com&lt;/title&gt;
+&lt;description&gt;example.com API results&lt;/description&gt;
+&lt;!-- 
+  More RSS content
+--&gt;
+
+&lt;!-- offset is the current offset of the response
+     total is the total number of items found by the query
+--&gt;
+&lt;newznab:response offset="0" total="1234"/&gt;
+
+&lt;item&gt;
+  &lt;!-- Standard RSS 2.0 data --&gt;
+  &lt;title&gt;A.Public.Domain.Tv.Show.S06E05&lt;/title&gt; 
+  &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+  &lt;link&gt;http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9&lt;/link&gt; 
+  &lt;comments&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c#comments&lt;/comments&gt;  
+  &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+  &lt;category&gt;TV &gt; XviD&lt;/category&gt;  
+  &lt;description&gt;Some TV show&lt;/description&gt;
+  &lt;enclosure url="http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt;
+
+  &lt;!-- Additional attributes --&gt;
+  &lt;newznab:attr name="category" value="5030"/&gt;
+  &lt;newznab:attr name="size"     value="154653309"/&gt;
+  &lt;newznab:attr name="season"   value="3"/&gt;
+  &lt;newznab:attr name="episode"  value="2"/&gt;
+&lt;/item&gt;
+
+&lt;item&gt;
+  &lt;!-- Standard RSS 2.0 data --&gt;
+  &lt;title&gt;A.Public.Domain.Tv.Show.S06E05&lt;/title&gt; 
+  &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+  &lt;link&gt;http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9&lt;/link&gt; 
+  &lt;comments&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c#comments&lt;/comments&gt;  
+  &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+  &lt;category&gt;TV &gt; XviD&lt;/category&gt;  
+  &lt;description&gt;Some TV show&lt;/description&gt;
+  &lt;enclosure url="http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt;
+
+  &lt;!-- Additional attributes --&gt;
+  &lt;newznab:attr name="category" value="5000" /&gt; 
+  &lt;newznab:attr name="category" value="5030" /&gt; 
+  &lt;newznab:attr name="size"     value="4294967295" /&gt; 
+  &lt;newznab:attr name="season"   value="3"/&gt;
+  &lt;newznab:attr name="episode"  value="1"/&gt;
+&lt;/item&gt;
+
+&lt;!-- more items to follow --&gt;
+
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="movie-search">MOVIE-SEARCH</h2>
+<p>The <code>MOVIE-SEARCH</code> function searches the index for items matching an IMDb ID or
+search query.  On successful search the response contains a list of items that
+matched the query. Even if the search matched nothing an empty but valid
+response is created and returned. This function requires passing the user
+credentials.</p>
+<p>The returned XML data stream is RSS 2.0 compliant and also contains additional
+information in the extra namespace and optionally movie specific information.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=movie</code></td>
+<td>Movie-Search function, must always be "movie".</td>
+</tr>
+<tr>
+<td><code>apikey=xxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>limit=123</code></td>
+<td>Upper limit for the number of items to be returned, e.g. 123.</td>
+</tr>
+<tr>
+<td><code>imdbid=xxxx</code></td>
+<td>IMDB id of the item being queried e.g. 0058935.</td>
+</tr>
+<tr>
+<td><code>cat=xxx</code></td>
+<td>List of categories to search delimited by ","</td>
+</tr>
+<tr>
+<td><code>genre=xxx</code></td>
+<td>A genre string i.e. 'Romance' would match '(Comedy, Drama, Indie, Romance)'</td>
+</tr>
+<tr>
+<td><code>q=xxxx</code></td>
+<td>Search input (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>o=xml</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+<tr>
+<td><code>attrs=xxx</code></td>
+<td>List of requested extended attributes delimeted by ","</td>
+</tr>
+<tr>
+<td><code>extended=1</code></td>
+<td>List all extended attributes (attrs ignored)</td>
+</tr>
+<tr>
+<td><code>del=1</code></td>
+<td>Delete the item from a users cart on download.</td>
+</tr>
+<tr>
+<td><code>maxage=123</code></td>
+<td>Only return results which were posted to usenet in the last x days.</td>
+</tr>
+<tr>
+<td><code>offset=50</code></td>
+<td>The 0 based query offset defining which part of the response we want.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=movie&amp;apikey=xxx&amp;imdbid=0058935</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+    &lt;title&gt;example.com&lt;/title&gt;
+    &lt;description&gt;example.com API results&lt;/description&gt;
+    &lt;!-- 
+      More RSS content
+    --&gt;
+
+    &lt;!-- offset is the current offset of the response
+         total is the total number of items found by the query
+    --&gt;
+    &lt;newznab:response offset="0" total="1234"/&gt;
+
+    &lt;item&gt;
+      &lt;!-- Standard RSS 2.0 data --&gt;
+      &lt;title&gt;A.Public.Domain.Movie.720p.DTS.x264&lt;/title&gt; 
+      &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+      &lt;link&gt;http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9&lt;/link&gt; 
+      &lt;comments&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c#comments&lt;/comments&gt;  
+      &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+      &lt;category&gt;Movie &gt; XviD&lt;/category&gt;  
+      &lt;description&gt;Some movie&lt;/description&gt;
+      &lt;enclosure url="http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt;
+
+      &lt;!-- Additional attributes --&gt;
+      &lt;newznab:attr name="category" value="2000" /&gt; 
+      &lt;newznab:attr name="category" value="2030" /&gt; 
+      &lt;newznab:attr name="size"     value="4294967295" /&gt; 
+    &lt;/item&gt;
+
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="music-search">MUSIC-SEARCH</h2>
+<p>The <code>MUSIC-SEARCH</code> function searches the index for items matching music properties.
+On successful search the response contains a list of items that matched the
+query. Even if the search matched nothing an empty but valid response is
+created and returned. This function requires passing the user credentials.</p>
+<p>The returned XML data stream is RSS 2.0 compliant and also contains additional
+information in the extra namespace and optionally music specific information.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=music</code></td>
+<td>Music-Search function, must always be "music".</td>
+</tr>
+<tr>
+<td><code>apikey=xxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>limit=123</code></td>
+<td>Upper limit for the number of items to be returned, e.g. 123.</td>
+</tr>
+<tr>
+<td><code>album=xxxx</code></td>
+<td>Album title (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>artist=xxxx</code></td>
+<td>Artist name (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>label=xxxx</code></td>
+<td>Publisher/Label name (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>track=xxxx</code></td>
+<td>Track name (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>year=xxxx</code></td>
+<td>Four digit year of release.</td>
+</tr>
+<tr>
+<td><code>genre=123</code></td>
+<td>List of music genre id's to search delimited by ",". See CAPS for available genres.</td>
+</tr>
+<tr>
+<td><code>cat=xxx</code></td>
+<td>List of categories to search delimited by ","</td>
+</tr>
+<tr>
+<td><code>o=xml</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+<tr>
+<td><code>attrs=xxx</code></td>
+<td>List of requested extended attributes delimited by ","</td>
+</tr>
+<tr>
+<td><code>extended=1</code></td>
+<td>List all extended attributes (attrs ignored)</td>
+</tr>
+<tr>
+<td><code>del=1</code></td>
+<td>Delete the item from a users cart on download.</td>
+</tr>
+<tr>
+<td><code>maxage=123</code></td>
+<td>Only return results which were posted to usenet in the last x days.</td>
+</tr>
+<tr>
+<td><code>offset=50</code></td>
+<td>The 0 based query offset defining which part of the response we want.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=music&amp;apikey=xxx&amp;album=Groovy&amp;extended=1</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+    &lt;title&gt;example.com&lt;/title&gt;
+    &lt;description&gt;example.com API results&lt;/description&gt;
+    &lt;!-- 
+      More RSS content
+    --&gt;
+
+    &lt;!-- offset is the current offset of the response
+         total is the total number of items found by the query
+    --&gt;
+    &lt;newznab:response offset="0" total="1234"/&gt;
+
+    &lt;item&gt;
+      &lt;!-- Standard RSS 2.0 data --&gt;
+      &lt;title&gt;A.Public.Domain.Album.Name&lt;/title&gt; 
+      &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+      &lt;link&gt;http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9&lt;/link&gt; 
+      &lt;comments&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c#comments&lt;/comments&gt;  
+      &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+      &lt;category&gt;Music &gt; MP3&lt;/category&gt;  
+      &lt;description&gt;Some music&lt;/description&gt;
+      &lt;enclosure url="http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt;
+
+      &lt;!-- Additional attributes --&gt;
+      &lt;newznab:attr name="category" value="3000" /&gt; 
+      &lt;newznab:attr name="category" value="3010" /&gt; 
+      &lt;newznab:attr name="size"     value="144967295" /&gt; 
+      &lt;newznab:attr name="artist"   value="Bob Smith" /&gt; 
+      &lt;newznab:attr name="album"    value="Groovy Tunes" /&gt; 
+      &lt;newznab:attr name="publisher" value="Epic Music" /&gt; 
+      &lt;newznab:attr name="year"     value="2011" /&gt; 
+      &lt;newznab:attr name="tracks"   value="track one|track two|track three" /&gt; 
+      &lt;newznab:attr name="coverurl" value="http://servername.com/covers/music/12345.jpg" /&gt; 
+      &lt;newznab:attr name="review"   value="This album is great" /&gt; 
+    &lt;/item&gt;
+
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="book-search">BOOK-SEARCH</h2>
+<p>The <code>BOOK-SEARCH</code> function searches the index for items matching book properties.
+On successful search the response contains a list of items that matched the
+query. Even if the search matched nothing an empty but valid response is
+created and returned. This function requires passing the user credentials.</p>
+<p>The returned XML data stream is RSS 2.0 compliant and also contains additional
+information in the extra namespace and optionally music specific information.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=book</code></td>
+<td>Book-Search function, must always be "book".</td>
+</tr>
+<tr>
+<td><code>apikey=xxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>limit=123</code></td>
+<td>Upper limit for the number of items to be returned, e.g. 123.</td>
+</tr>
+<tr>
+<td><code>title=xxxx</code></td>
+<td>Book title (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>author=xxxx</code></td>
+<td>Author name (URL/UTF-8 encoded). Case insensitive.</td>
+</tr>
+<tr>
+<td><code>o=xml</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+<tr>
+<td><code>attrs=xxx</code></td>
+<td>List of requested extended attributes delimited by ","</td>
+</tr>
+<tr>
+<td><code>extended=1</code></td>
+<td>List all extended attributes (attrs ignored)</td>
+</tr>
+<tr>
+<td><code>del=1</code></td>
+<td>Delete the item from a users cart on download.</td>
+</tr>
+<tr>
+<td><code>maxage=123</code></td>
+<td>Only return results which were posted to usenet in the last x days.</td>
+</tr>
+<tr>
+<td><code>offset=50</code></td>
+<td>The 0 based query offset defining which part of the response we want.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=book&amp;apikey=xxx&amp;author=Charles%20Dack&amp;extended=1</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+    &lt;title&gt;example.com&lt;/title&gt;
+    &lt;description&gt;example.com API results&lt;/description&gt;
+    &lt;!-- 
+      More RSS content
+    --&gt;
+
+    &lt;!-- offset is the current offset of the response
+         total is the total number of items found by the query
+    --&gt;
+    &lt;newznab:response offset="0" total="1234"/&gt;
+
+    &lt;item&gt;
+      &lt;!-- Standard RSS 2.0 data --&gt;
+      &lt;title&gt;A.Public.Domain.Book.Name&lt;/title&gt; 
+      &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+      &lt;link&gt;http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9&lt;/link&gt; 
+      &lt;comments&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c#comments&lt;/comments&gt;  
+      &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+      &lt;category&gt;Misc &gt; Ebook&lt;/category&gt;  
+      &lt;description&gt;Some book&lt;/description&gt;
+      &lt;enclosure url="http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt;
+
+      &lt;!-- Additional attributes --&gt;
+      &lt;newznab:attr name="category" value="7020" /&gt; 
+      &lt;newznab:attr name="size"     value="144967295" /&gt; 
+      &lt;newznab:attr name="author"   value="Charles Dack" /&gt; 
+      &lt;newznab:attr name="title"    value="Weather and Folk Lore of Peterborough and District" /&gt; 
+      &lt;newznab:attr name="review"   value="This book is a classic" /&gt; 
+    &lt;/item&gt;
+
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="details">DETAILS</h2>
+<p>The <code>DETAILS</code> function returns all information for a particular Usenet (NZB) item.
+The response contains the generic RSS part + full extra information + full
+type/category specific information.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=details</code></td>
+<td>Details function, must always be "details".</td>
+</tr>
+<tr>
+<td><code>id=xxxx</code></td>
+<td>The GUID of the item being queried.</td>
+</tr>
+<tr>
+<td><code>apikey=xxxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>o=xxx</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=details&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+  &lt;item&gt;
+    &lt;!-- Standard RSS 2.0 Data --&gt;
+    &lt;title&gt;A.Public.Domain.Tv.Show.S06E05&lt;/title&gt; 
+    &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+    &lt;link&gt;http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9&lt;/link&gt; 
+    &lt;comments&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c#comments&lt;/comments&gt;  
+    &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+    &lt;category&gt;TV &gt; XviD&lt;/category&gt;  
+    &lt;description&gt;Some TV show&lt;/description&gt;
+    &lt;enclosure url="http://servername.com/rss/nzb/e9c515e02346086e3a477a5436d7bc8c&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt;
+
+    &lt;!-- 
+         Additional attributes 
+         Details function returns all possible attributes that are 1) known and 2) applicable
+         for the item requested.
+    --&gt;
+    &lt;newznab:attr name="category"   value="2000" /&gt; 
+    &lt;newznab:attr name="category"   value="2030" /&gt; 
+    &lt;newznab:attr name="size"       value="4294967295" /&gt; 
+    &lt;newznab:attr name="files"      value="107" /&gt; 
+    &lt;newznab:attr name="poster"     value="example@4u.net (example)" /&gt; 
+    &lt;newznab:attr name="grabs"      value="1" /&gt; 
+    &lt;newznab:attr name="comments"   value="0" /&gt; 
+    &lt;newznab:attr name="usenetdate" value="Tue, 22 Jun 2010 06:54:22 +0100" /&gt;  
+    &lt;newznab:attr name="group"      value="alt.binaries.teevee" /&gt;
+
+  &lt;/item&gt;  
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because it was malformed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=details&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="200" description="Missing parameter: key"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=details&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="300" description="No such GUID"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because user credentials are broken</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=details&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="100" description="Incorrect user credentials"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="getnfo">GETNFO</h2>
+<p>The <code>GETNFO</code> function returns an nfo file for a particular Usenet (NZB) item.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>t=getnfo</td>
+<td>Details function, must always be "getnfo".</td>
+</tr>
+<tr>
+<td>id=xxxx</td>
+<td>The GUID of the item being queried.</td>
+</tr>
+<tr>
+<td>apikey=xxxx</td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>raw=1</td>
+<td>If provided returns just the nfo file without the rss container</td>
+</tr>
+<tr>
+<td>o=xxx</td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=getnfo&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+  &lt;item&gt;
+    &lt;!-- Standard RSS 2.0 Data --&gt;
+    &lt;title&gt;A.Public.Domain.Tv.Show.S06E05&lt;/title&gt; 
+    &lt;guid isPermaLink="true"&gt;http://servername.com/details/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+    &lt;link&gt;http://servername.com/nfo/e9c515e02346086e3a477a5436d7bc8c&lt;/link&gt; 
+    &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+    &lt;description&gt;This is the nfo file&lt;/description&gt;
+    &lt;enclosure url="http://servername.com/nfo/e9c515e02346086e3a477a5436d7bc8c&amp;ampenclosure=1&amp;amp;i=1&amp;amp;r=18cf9f0a736041465e3bd521d00a90b9" length="154653309" type="application/x-nzb" /&gt; 
+  &lt;/item&gt;  
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because it was malformed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=getnfo&amp;apikey=xxxxx&amp;id=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="200" description="Missing parameter: id"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=getnfo&amp;apikey=xxxxx&amp;id=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="300" description="No such GUID"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because user credentials are broken</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=getnfo&amp;apikey=xxxxx&amp;id=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="100" description="Incorrect user credentials"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="get">GET</h2>
+<p>The <code>GET</code> function returns an nzb for a guid.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>t=get</td>
+<td>Details function, must always be "get".</td>
+</tr>
+<tr>
+<td>id=xxxx</td>
+<td>The GUID of the item being queried.</td>
+</tr>
+<tr>
+<td>apikey=xxxx</td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>del=1</td>
+<td>If provided removes the nzb from the users cart (if present)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Normal behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=get&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE nzb PUBLIC "-//newzBin//DTD NZB 1.1//EN" "http://www.newzbin.com/DTD/nzb/nzb-1.1.dtd"&gt;
+&lt;nzb xmlns="http://www.newzbin.com/DTD/2003/nzb"&gt;
+...
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because it was malformed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=get&amp;apikey=xxxxx&amp;id=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="200" description="Missing parameter: id"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=get&amp;apikey=xxxxx&amp;id=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="300" description="No such GUID"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because user credentials are broken</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=get&amp;apikey=xxxxx&amp;id=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="100" description="Incorrect user credentials"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="cart-add">CART-ADD</h2>
+<p>The <code>CART-ADD</code> function adds an item to the users cart.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=cartadd</code></td>
+<td>Cart add function, must always be "cartadd".</td>
+</tr>
+<tr>
+<td><code>id=xxxx</code></td>
+<td>The GUID of the item being added to the cart.</td>
+</tr>
+<tr>
+<td><code>apikey=xxxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>o=xxx</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Default behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartadd&amp;id=12344234234234&amp;apikey=xxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;cartadd id="123" /&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because it was malformed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartadd&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="200" description="Missing parameter: id"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartadd&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="300" description="No such GUID"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because user credentials are broken</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartadd&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="100" description="Incorrect user credentials"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because item already exists</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartadd&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="310" description="Item already exists"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="cart-del">CART-DEL</h2>
+<p>The <code>CART-DEL</code> function deletes an item from the users cart.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=cartdel</code></td>
+<td>Cart del function, must always be "cartdel".</td>
+</tr>
+<tr>
+<td><code>id=xxxx</code></td>
+<td>The GUID of the item being delete from the cart.</td>
+</tr>
+<tr>
+<td><code>apikey=xxxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>o=xxx</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Default behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartdel&amp;id=12344234234234&amp;apikey=xxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;cartdel id="123" /&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because it was malformed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartdel&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="200" description="Missing parameter: id"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartdel&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="300" description="No such GUID"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because user credentials are broken</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=cartdel&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="100" description="Incorrect user credentials"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="comments">COMMENTS</h2>
+<p>The <code>COMMENTS</code> function returns all comments known about a release.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=comments</code></td>
+<td>Comments function, must always be "comments".</td>
+</tr>
+<tr>
+<td><code>guid=xxxx</code></td>
+<td>The GUID of the item being queried.</td>
+</tr>
+<tr>
+<td><code>apikey=xxxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>o=xxx</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Default behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=comments&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rss version="2.0"&gt;
+&lt;channel&gt;
+  &lt;item&gt;
+    &lt;!-- Standard RSS 2.0 Data --&gt;
+    &lt;title&gt;username_of_poster&lt;/title&gt; 
+    &lt;guid isPermaLink="true"&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/guid&gt; 
+    &lt;link&gt;http://servername.com/rss/viewnzb/e9c515e02346086e3a477a5436d7bc8c&lt;/link&gt; 
+    &lt;pubDate&gt;Sun, 06 Jun 2010 17:29:23 +0100&lt;/pubDate&gt; 
+    &lt;description&gt;Comment about the item&lt;/description&gt;
+  &lt;/item&gt;  
+&lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because it was malformed</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=comments&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="200" description="Missing parameter: key"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=comments&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="300" description="No such GUID"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because user credentials are broken</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET http://servername.com/api?t=comments&amp;apikey=xxxxx&amp;guid=xxxxxxxxx</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"/&gt;
+&lt;error code="100" description="Incorrect user credentials"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="comments-add">COMMENTS-ADD</h2>
+<p>The <code>COMMENTS-ADD</code> function adds a comment to a release.</p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=commentadd</code></td>
+<td>Comments-add function, must always be "commentadd".</td>
+</tr>
+<tr>
+<td><code>guid=xxxx</code></td>
+<td>The GUID of the item being queried.</td>
+</tr>
+<tr>
+<td><code>apikey=xxxx</code></td>
+<td>User's key as provided by the service provider.</td>
+</tr>
+<tr>
+<td><code>text=xxxx</code></td>
+<td>The comment being added (URL/UTF-8 encoded).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Optional Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>o=xxx</code></td>
+<td>Output format, either "JSON" or "XML". Default is "XML".</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Default behavior</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=commentadd&amp;apikey=xxxxx&amp;guid=xxxxxxxxx&amp;text=comment</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;commentadd id="123" /&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=commentadd&amp;apikey=xxxxx&amp;guid=xxxxxxxxx&amp;text=comment</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="300" description="No such item"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Adding comments via API is not enabled</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=commentadd&amp;apikey=xxxxx&amp;guid=xxxxxxxxx&amp;text=comment</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="203" description="Function not available"/&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="user">USER</h2>
+<p>The <code>USER</code> function is used for retrieving information about a user account </p>
+<p><strong>HTTP Method</strong></p>
+<p>GET</p>
+<p><strong>HTTP Response</strong></p>
+<p>200 OK</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t=user</code></td>
+<td>User function, must always be "user"</td>
+</tr>
+<tr>
+<td><code>username=xxx</code></td>
+<td>A valid username (URL/UTF-8 encoded).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<ol>
+<li>
+<p>Default behavior </p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=user&amp;username=user123</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;user username="user123" grabs="123" role="User" apirequests="100" downloadrequests="100" 
+movieview="1" musicview="1" consoleview="1" createddate="2011-08-23 12:31:47" /&gt;
+</code></pre>
+</li>
+<li>
+<p>Query could not be completed because no such item was available</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=user&amp;username=user123</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="300" description="No such item"/&gt;
+</code></pre>
+</li>
+<li>
+<p>Function disabled</p>
+<p><strong>Request</strong>:</p>
+<p><code>GET HTTP://servername.com/api?t=user&amp;username=user123</code></p>
+<p><strong>Response</strong>:</p>
+<p><code>200 OK</code></p>
+<p><strong>Content</strong>:</p>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;error code="203" description="Function not available"/&gt;
+</code></pre>
+</li>
+</ol>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../errors/" class="btn btn-neutral float-right" title="Errors"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../errors/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>
